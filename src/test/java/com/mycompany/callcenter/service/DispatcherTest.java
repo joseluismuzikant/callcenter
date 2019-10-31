@@ -35,6 +35,7 @@ public class DispatcherTest {
 		
 		Thread.sleep(1000);
 		
+		//Must be 94 waiting calls= 100 - 6 employees occupied
 		Assert.assertTrue(dispatcher.getwaitingCalls().size() == 94);
 		Assert.assertTrue(dispatcher.getAvailableListeners() == 0);
 	}

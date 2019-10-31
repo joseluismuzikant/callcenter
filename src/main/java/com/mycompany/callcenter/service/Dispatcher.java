@@ -25,6 +25,9 @@ import com.mycompany.callcenter.repository.DirectorRepository;
 import com.mycompany.callcenter.repository.OperatorRepository;
 import com.mycompany.callcenter.repository.SupervisorRepository;
 
+/**
+ * Handles multiples calls among the available employees
+ */
 @Service
 public class Dispatcher {
 
@@ -56,7 +59,8 @@ public class Dispatcher {
 
 	@PostConstruct
 	public void loadCallListeners() {
-		//Could to use Mock in the Unit test instead od that
+		//TODO:use Mock in the Unit test instead of that
+		
 		if(operatorRepository!=null) {
 			operators.addAll(operatorRepository.findAll());
 		}
@@ -68,7 +72,12 @@ public class Dispatcher {
 			directors.addAll(directorRepository.findAll());
 		}
 	}
-
+	
+	/**
+	 * Where there are more than 10 concurrent calls, the call will be put 
+	 * in the executorService thread queue
+	 * @param call
+	 */
 	public void asynchronousDispatchCall(Call call) {
 		executorService.submit(() -> {
 			try {
@@ -81,7 +90,14 @@ public class Dispatcher {
 			}
 		});
 	}
-
+	
+	/**
+	 * When there arent any employee available the call will put on a waiting queue
+	 * 
+	 * @param call
+	 * @return
+	 * @throws ListenerNotFoundException
+	 */
 	public CallListener dispatchCall(Call call) throws ListenerNotFoundException {
 
 		CallListener callListener = operators.poll();
@@ -102,8 +118,11 @@ public class Dispatcher {
 
 		return callListener;
 	}
-
-	@Scheduled(fixedDelay = 5000)
+	
+	/**
+	 * Each second it verifies if there are waiting calls and dispatches them
+	 */
+	@Scheduled(fixedDelay = 1000)
 	public void processWaitingCalls() {
 		if (waitingCalls.size() > 0) {
 			asynchronousDispatchCall(waitingCalls.remove());

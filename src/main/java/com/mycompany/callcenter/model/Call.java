@@ -3,6 +3,9 @@ package com.mycompany.callcenter.model;
 
 import java.util.Random;
 
+/* Modeling a call with a random duration
+ * between 5 and 10 minutes
+ */
 public class Call {
 
 	String number;

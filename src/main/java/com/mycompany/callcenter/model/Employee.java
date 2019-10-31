@@ -13,10 +13,12 @@ import javax.persistence.InheritanceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mycompany.callcenter.service.Dispatcher;
+
 @Entity(name = "Employee")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "rol")
-public abstract class Employee implements CallListener {
+public class Employee implements CallListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(Employee.class);
 
@@ -38,12 +40,21 @@ public abstract class Employee implements CallListener {
 		}
 	}
 
+	public long getId() {
+		return id;
+	}
+	
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public void attendCall(Call call, Dispatcher dispatcher) {
+		throw new UnsupportedOperationException();
 	}
 
 }

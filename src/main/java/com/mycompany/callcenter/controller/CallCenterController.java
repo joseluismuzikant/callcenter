@@ -30,10 +30,14 @@ import com.mycompany.callcenter.repository.OperatorRepository;
 import com.mycompany.callcenter.repository.SupervisorRepository;
 import com.mycompany.callcenter.service.Dispatcher;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * The type CallCenter controller.
  *
  */
+@Api(value = "/api/v1", description = "Api for employees and calls")
 @RestController()
 @RequestMapping("/api/v1")
 public class CallCenterController {
@@ -56,10 +60,8 @@ public class CallCenterController {
 	
 	/**
 	 * Post a call into the call center
-	 *
-	 * @param number
-	 *            the call number
 	 */
+	@ApiOperation(value = "Post a call into the call center.", responseContainer = "Call")
 	@PostMapping("/incomingcall/{number}")
 	public void incomingCall(@PathVariable(value = "number") String number) {
 		dispatcher.asynchronousDispatchCall(new Call(number));
@@ -68,9 +70,8 @@ public class CallCenterController {
 
 	/**
 	 * Get all waiting calls.
-	 *
-	 * @return the list
 	 */
+	@ApiOperation(value = "Get all waiting calls", responseContainer = "List<Call>")
 	@GetMapping("/waitingcalls")
 	public List<Call> getAllWitingCalls() {
 		return dispatcher.getwaitingCalls();
@@ -78,9 +79,8 @@ public class CallCenterController {
 
 	/**
 	 * Get all employees list.
-	 *
-	 * @return the list
 	 */
+	@ApiOperation(value = "Get all employees list.", responseContainer = "List<Employee>")
 	@GetMapping("/employees")
 	public List<Employee> getAllEmployees() {
 		return employeeRepository.findAll();
